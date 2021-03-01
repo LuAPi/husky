@@ -4,7 +4,7 @@ topics:
   timeout : 0.5
   priority: 10
 - name    : remote_joy
-  topic   : /remote/joy_teleop/cmd_vel
+  topic   : /mvc/relay/joy_teleop/cmd_vel
   timeout : 0.5
   priority: 5
 - name    : interactive_marker
