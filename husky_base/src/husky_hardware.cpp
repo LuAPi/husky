@@ -34,7 +34,7 @@
 
 namespace
 {
-  const uint8_t LEFT = 0, RIGHT = 1;
+  const uint8_t LEFT = 1, RIGHT = 0;
 };
 
 namespace husky_base
@@ -78,7 +78,7 @@ namespace husky_base
     {
       for (int i = 0; i < 4; i++)
       {
-        joints_[i].position_offset = linearToAngular(enc->getTravel(i % 2));
+        joints_[i].position_offset = linearToAngular(-enc->getTravel(i % 2));
       }
     }
     else
@@ -148,10 +148,10 @@ namespace husky_base
       polling_timeout_);
     if (enc)
     {
-      ROS_DEBUG_STREAM("Received travel information (L:" << enc->getTravel(LEFT) << " R:" << enc->getTravel(RIGHT) << ")");
+      ROS_DEBUG_STREAM("Received travel information (L:" << -enc->getTravel(LEFT) << " R:" << -enc->getTravel(RIGHT) << ")");
       for (int i = 0; i < 4; i++)
       {
-        double delta = linearToAngular(enc->getTravel(i % 2)) - joints_[i].position - joints_[i].position_offset;
+        double delta = linearToAngular(-enc->getTravel(i % 2)) - joints_[i].position - joints_[i].position_offset;
 
         // detect suspiciously large readings, possibly from encoder rollover
         if (std::abs(delta) < 1.0)
@@ -171,16 +171,16 @@ namespace husky_base
       polling_timeout_);
     if (speed)
     {
-      ROS_DEBUG_STREAM("Received linear speed information (L:" << speed->getLeftSpeed() << " R:" << speed->getRightSpeed() << ")");
+      ROS_DEBUG_STREAM("Received linear speed information (L:" << -speed->getLeftSpeed() << " R:" << -speed->getRightSpeed() << ")");
       for (int i = 0; i < 4; i++)
       {
         if (i % 2 == LEFT)
         {
-          joints_[i].velocity = linearToAngular(speed->getLeftSpeed());
+          joints_[i].velocity = linearToAngular(-speed->getLeftSpeed());
         }
         else
         { // assume RIGHT
-          joints_[i].velocity = linearToAngular(speed->getRightSpeed());
+          joints_[i].velocity = linearToAngular(-speed->getRightSpeed());
         }
       }
     }
@@ -191,8 +191,8 @@ namespace husky_base
   */
   void HuskyHardware::writeCommandsToHardware()
   {
-    double diff_speed_left = angularToLinear(joints_[LEFT].velocity_command);
-    double diff_speed_right = angularToLinear(joints_[RIGHT].velocity_command);
+    double diff_speed_left = angularToLinear(-joints_[LEFT].velocity_command);
+    double diff_speed_right = angularToLinear(-joints_[RIGHT].velocity_command);
 
     limitDifferentialSpeed(diff_speed_left, diff_speed_right);
 
