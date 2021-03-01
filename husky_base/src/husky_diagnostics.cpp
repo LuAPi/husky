@@ -72,17 +72,17 @@ namespace husky_base
     msg_.uptime = system_status->getUptime();
 
     msg_.battery_voltage = system_status->getVoltage(0);
-    msg_.left_driver_voltage = system_status->getVoltage(1);
-    msg_.right_driver_voltage = system_status->getVoltage(2);
+    msg_.left_driver_voltage = system_status->getVoltage(2);
+    msg_.right_driver_voltage = system_status->getVoltage(1);
 
     msg_.mcu_and_user_port_current = system_status->getCurrent(0);
-    msg_.left_driver_current = system_status->getCurrent(1);
-    msg_.right_driver_current = system_status->getCurrent(2);
+    msg_.left_driver_current = system_status->getCurrent(2);
+    msg_.right_driver_current = system_status->getCurrent(1);
 
-    msg_.left_driver_temp = system_status->getTemperature(0);
-    msg_.right_driver_temp = system_status->getTemperature(1);
-    msg_.left_motor_temp = system_status->getTemperature(2);
-    msg_.right_motor_temp = system_status->getTemperature(3);
+    msg_.left_driver_temp = system_status->getTemperature(1);
+    msg_.right_driver_temp = system_status->getTemperature(0);
+    msg_.left_motor_temp = system_status->getTemperature(3);
+    msg_.right_motor_temp = system_status->getTemperature(2);
 
     stat.add("Uptime", msg_.uptime);
 
