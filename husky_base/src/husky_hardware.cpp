@@ -34,7 +34,7 @@
 
 namespace
 {
-  const uint8_t LEFT = 1, RIGHT = 0;
+  const uint8_t LEFT = 0, RIGHT = 1;
 };
 
 namespace husky_base
@@ -111,8 +111,8 @@ namespace husky_base
   */
   void HuskyHardware::registerControlInterfaces()
   {
-    ros::V_string joint_names = boost::assign::list_of("front_left_wheel")
-      ("front_right_wheel")("rear_left_wheel")("rear_right_wheel");
+    ros::V_string joint_names = boost::assign::list_of("rear_right_wheel")
+      ("rear_left_wheel")("front_right_wheel")("front_left_wheel");
     for (unsigned int i = 0; i < joint_names.size(); i++)
     {
       hardware_interface::JointStateHandle joint_state_handle(joint_names[i],
@@ -148,7 +148,7 @@ namespace husky_base
       polling_timeout_);
     if (enc)
     {
-      ROS_DEBUG_STREAM("Received travel information (L:" << -enc->getTravel(LEFT) << " R:" << -enc->getTravel(RIGHT) << ")");
+      ROS_DEBUG_STREAM("Received travel information (L:" << -enc->getTravel(RIGHT) << " R:" << -enc->getTravel(LEFT) << ")");
       for (int i = 0; i < 4; i++)
       {
         double delta = linearToAngular(-enc->getTravel(i % 2)) - joints_[i].position - joints_[i].position_offset;
@@ -171,7 +171,7 @@ namespace husky_base
       polling_timeout_);
     if (speed)
     {
-      ROS_DEBUG_STREAM("Received linear speed information (L:" << -speed->getLeftSpeed() << " R:" << -speed->getRightSpeed() << ")");
+      ROS_DEBUG_STREAM("Received linear speed information (L:" << -speed->getRightSpeed() << " R:" << -speed->getLeftSpeed() << ")");
       for (int i = 0; i < 4; i++)
       {
         if (i % 2 == LEFT)
